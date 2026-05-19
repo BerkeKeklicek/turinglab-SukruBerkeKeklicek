@@ -1,0 +1,58 @@
+name: "string_copy"
+description: "a/b alfabesindeki dizgiyi w#w biciminde kopyalar."
+states:
+  - q_start
+  - q_seek_end
+  - q_return_left
+  - q_find_unmarked
+  - q_append_a
+  - q_append_b
+  - q_cleanup
+  - q_accept
+input_alphabet: ["a", "b"]
+tape_alphabet: ["a", "b", "B", "#", "A", "B'"]
+blank: "B"
+start_state: q_start
+accept_states: [q_accept]
+reject_states: []
+transitions:
+  - {state: q_start, read: "a", next: q_seek_end, write: "a", move: R}
+  - {state: q_start, read: "b", next: q_seek_end, write: "b", move: R}
+  - {state: q_start, read: "B", next: q_accept, write: "#", move: S}
+
+  - {state: q_seek_end, read: "a", next: q_seek_end, write: "a", move: R}
+  - {state: q_seek_end, read: "b", next: q_seek_end, write: "b", move: R}
+  - {state: q_seek_end, read: "B", next: q_return_left, write: "#", move: L}
+
+  - {state: q_return_left, read: "a", next: q_return_left, write: "a", move: L}
+  - {state: q_return_left, read: "b", next: q_return_left, write: "b", move: L}
+  - {state: q_return_left, read: "A", next: q_return_left, write: "A", move: L}
+  - {state: q_return_left, read: "B'", next: q_return_left, write: "B'", move: L}
+  - {state: q_return_left, read: "#", next: q_return_left, write: "#", move: L}
+  - {state: q_return_left, read: "B", next: q_find_unmarked, write: "B", move: R}
+
+  - {state: q_find_unmarked, read: "A", next: q_find_unmarked, write: "A", move: R}
+  - {state: q_find_unmarked, read: "B'", next: q_find_unmarked, write: "B'", move: R}
+  - {state: q_find_unmarked, read: "a", next: q_append_a, write: "A", move: R}
+  - {state: q_find_unmarked, read: "b", next: q_append_b, write: "B'", move: R}
+  - {state: q_find_unmarked, read: "#", next: q_cleanup, write: "#", move: L}
+
+  - {state: q_append_a, read: "a", next: q_append_a, write: "a", move: R}
+  - {state: q_append_a, read: "b", next: q_append_a, write: "b", move: R}
+  - {state: q_append_a, read: "A", next: q_append_a, write: "A", move: R}
+  - {state: q_append_a, read: "B'", next: q_append_a, write: "B'", move: R}
+  - {state: q_append_a, read: "#", next: q_append_a, write: "#", move: R}
+  - {state: q_append_a, read: "B", next: q_return_left, write: "a", move: L}
+
+  - {state: q_append_b, read: "a", next: q_append_b, write: "a", move: R}
+  - {state: q_append_b, read: "b", next: q_append_b, write: "b", move: R}
+  - {state: q_append_b, read: "A", next: q_append_b, write: "A", move: R}
+  - {state: q_append_b, read: "B'", next: q_append_b, write: "B'", move: R}
+  - {state: q_append_b, read: "#", next: q_append_b, write: "#", move: R}
+  - {state: q_append_b, read: "B", next: q_return_left, write: "b", move: L}
+
+  - {state: q_cleanup, read: "A", next: q_cleanup, write: "a", move: L}
+  - {state: q_cleanup, read: "B'", next: q_cleanup, write: "b", move: L}
+  - {state: q_cleanup, read: "a", next: q_cleanup, write: "a", move: L}
+  - {state: q_cleanup, read: "b", next: q_cleanup, write: "b", move: L}
+  - {state: q_cleanup, read: "B", next: q_accept, write: "B", move: R}

@@ -1,0 +1,108 @@
+name: "unary_to_binary"
+description: "Unary girisi binary gosterime cevirir."
+states:
+  - q_start
+  - q_scan_end
+  - q_write_zero
+  - q_return_left
+  - q_find_unmarked
+  - q_to_separator
+  - q_inc
+  - q_rev_seek_end
+  - q_rev_find_bit
+  - q_carry_0_left
+  - q_carry_1_left
+  - q_place_0
+  - q_place_1
+  - q_after_place
+  - q_cleanup_right
+  - q_cleanup_left_back
+  - q_cleanup_left
+  - q_accept
+  - q_reject
+input_alphabet: ["1"]
+tape_alphabet: ["0", "1", "B", "X", "#"]
+blank: "B"
+start_state: q_start
+accept_states: [q_accept]
+reject_states: [q_reject]
+transitions:
+  - {state: q_start, read: "1", next: q_scan_end, write: "1", move: R}
+  - {state: q_start, read: "B", next: q_accept, write: "0", move: S}
+
+  - {state: q_scan_end, read: "1", next: q_scan_end, write: "1", move: R}
+  - {state: q_scan_end, read: "B", next: q_write_zero, write: "#", move: R}
+
+  - {state: q_write_zero, read: "B", next: q_return_left, write: "0", move: L}
+
+  - {state: q_return_left, read: "0", next: q_return_left, write: "0", move: L}
+  - {state: q_return_left, read: "1", next: q_return_left, write: "1", move: L}
+  - {state: q_return_left, read: "X", next: q_return_left, write: "X", move: L}
+  - {state: q_return_left, read: "#", next: q_return_left, write: "#", move: L}
+  - {state: q_return_left, read: "B", next: q_find_unmarked, write: "B", move: R}
+
+  - {state: q_find_unmarked, read: "X", next: q_find_unmarked, write: "X", move: R}
+  - {state: q_find_unmarked, read: "1", next: q_to_separator, write: "X", move: R}
+  - {state: q_find_unmarked, read: "#", next: q_rev_seek_end, write: "#", move: R}
+  - {state: q_find_unmarked, read: "B", next: q_reject, write: "B", move: S}
+
+  - {state: q_to_separator, read: "1", next: q_to_separator, write: "1", move: R}
+  - {state: q_to_separator, read: "X", next: q_to_separator, write: "X", move: R}
+  - {state: q_to_separator, read: "#", next: q_inc, write: "#", move: R}
+
+  - {state: q_inc, read: "0", next: q_return_left, write: "1", move: L}
+  - {state: q_inc, read: "1", next: q_inc, write: "0", move: R}
+  - {state: q_inc, read: "B", next: q_return_left, write: "1", move: L}
+
+  - {state: q_rev_seek_end, read: "0", next: q_rev_seek_end, write: "0", move: R}
+  - {state: q_rev_seek_end, read: "1", next: q_rev_seek_end, write: "1", move: R}
+  - {state: q_rev_seek_end, read: "X", next: q_rev_seek_end, write: "X", move: R}
+  - {state: q_rev_seek_end, read: "B", next: q_rev_find_bit, write: "B", move: L}
+
+  - {state: q_rev_find_bit, read: "X", next: q_rev_find_bit, write: "X", move: L}
+  - {state: q_rev_find_bit, read: "0", next: q_carry_0_left, write: "X", move: L}
+  - {state: q_rev_find_bit, read: "1", next: q_carry_1_left, write: "X", move: L}
+  - {state: q_rev_find_bit, read: "#", next: q_cleanup_right, write: "B", move: R}
+
+  - {state: q_carry_0_left, read: "0", next: q_carry_0_left, write: "0", move: L}
+  - {state: q_carry_0_left, read: "1", next: q_carry_0_left, write: "1", move: L}
+  - {state: q_carry_0_left, read: "X", next: q_carry_0_left, write: "X", move: L}
+  - {state: q_carry_0_left, read: "#", next: q_carry_0_left, write: "#", move: L}
+  - {state: q_carry_0_left, read: "B", next: q_place_0, write: "B", move: R}
+
+  - {state: q_carry_1_left, read: "0", next: q_carry_1_left, write: "0", move: L}
+  - {state: q_carry_1_left, read: "1", next: q_carry_1_left, write: "1", move: L}
+  - {state: q_carry_1_left, read: "X", next: q_carry_1_left, write: "X", move: L}
+  - {state: q_carry_1_left, read: "#", next: q_carry_1_left, write: "#", move: L}
+  - {state: q_carry_1_left, read: "B", next: q_place_1, write: "B", move: R}
+
+  - {state: q_place_0, read: "0", next: q_place_0, write: "0", move: R}
+  - {state: q_place_0, read: "1", next: q_place_0, write: "1", move: R}
+  - {state: q_place_0, read: "X", next: q_after_place, write: "0", move: R}
+  - {state: q_place_0, read: "#", next: q_reject, write: "#", move: S}
+
+  - {state: q_place_1, read: "0", next: q_place_1, write: "0", move: R}
+  - {state: q_place_1, read: "1", next: q_place_1, write: "1", move: R}
+  - {state: q_place_1, read: "X", next: q_after_place, write: "1", move: R}
+  - {state: q_place_1, read: "#", next: q_reject, write: "#", move: S}
+
+  - {state: q_after_place, read: "0", next: q_after_place, write: "0", move: R}
+  - {state: q_after_place, read: "1", next: q_after_place, write: "1", move: R}
+  - {state: q_after_place, read: "X", next: q_after_place, write: "X", move: R}
+  - {state: q_after_place, read: "#", next: q_rev_seek_end, write: "#", move: R}
+
+  - {state: q_cleanup_right, read: "0", next: q_cleanup_right, write: "B", move: R}
+  - {state: q_cleanup_right, read: "1", next: q_cleanup_right, write: "B", move: R}
+  - {state: q_cleanup_right, read: "X", next: q_cleanup_right, write: "B", move: R}
+  - {state: q_cleanup_right, read: "#", next: q_cleanup_right, write: "B", move: R}
+  - {state: q_cleanup_right, read: "B", next: q_cleanup_left_back, write: "B", move: L}
+
+  - {state: q_cleanup_left_back, read: "B", next: q_cleanup_left_back, write: "B", move: L}
+  - {state: q_cleanup_left_back, read: "X", next: q_cleanup_left, write: "B", move: L}
+  - {state: q_cleanup_left_back, read: "0", next: q_accept, write: "0", move: S}
+  - {state: q_cleanup_left_back, read: "1", next: q_accept, write: "1", move: S}
+
+  - {state: q_cleanup_left, read: "X", next: q_cleanup_left, write: "B", move: L}
+  - {state: q_cleanup_left, read: "0", next: q_accept, write: "0", move: S}
+  - {state: q_cleanup_left, read: "1", next: q_accept, write: "1", move: S}
+  - {state: q_cleanup_left, read: "B", next: q_accept, write: "B", move: S}

@@ -1,0 +1,21 @@
+name: "binary_divisible_by_4"
+description: "Binary sayinin 4'e bolunup bolunmedigini test eder."
+states: [q_scan, q_last, q_need_zero, q_accept, q_reject]
+input_alphabet: ["0", "1"]
+tape_alphabet: ["0", "1", "B"]
+blank: "B"
+start_state: q_scan
+accept_states: [q_accept]
+reject_states: [q_reject]
+transitions:
+  - {state: q_scan, read: "0", next: q_scan, write: "0", move: R}
+  - {state: q_scan, read: "1", next: q_scan, write: "1", move: R}
+  - {state: q_scan, read: "B", next: q_last, write: "B", move: L}
+
+  - {state: q_last, read: "0", next: q_need_zero, write: "0", move: L}
+  - {state: q_last, read: "1", next: q_reject, write: "1", move: S}
+  - {state: q_last, read: "B", next: q_reject, write: "B", move: S}
+
+  - {state: q_need_zero, read: "0", next: q_accept, write: "0", move: S}
+  - {state: q_need_zero, read: "1", next: q_reject, write: "1", move: S}
+  - {state: q_need_zero, read: "B", next: q_accept, write: "B", move: S}

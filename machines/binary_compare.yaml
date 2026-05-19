@@ -1,0 +1,137 @@
+name: "binary_compare"
+description: "Iki binary sayiyi karsilastirir; ilk sayi buyukse kabul eder."
+states:
+  - q_len_return_left
+  - q_len_find_first
+  - q_len_to_second
+  - q_len_find_second
+  - q_len_check_second
+  - q_restore_go_left
+  - q_restore_right
+  - q_compare_return_left
+  - q_compare_first
+  - q_cmp_second_0
+  - q_cmp_second_1
+  - q_cmp_find_second_0
+  - q_cmp_find_second_1
+  - q_clean_accept_left
+  - q_clean_accept_right
+  - q_clean_reject_left
+  - q_clean_reject_right
+  - q_accept
+  - q_reject
+input_alphabet: ["0", "1", "#"]
+tape_alphabet: ["0", "1", "#", "B", "X", "Y"]
+blank: "B"
+start_state: q_len_return_left
+accept_states: [q_accept]
+reject_states: [q_reject]
+transitions:
+  - {state: q_len_return_left, read: "0", next: q_len_return_left, write: "0", move: L}
+  - {state: q_len_return_left, read: "1", next: q_len_return_left, write: "1", move: L}
+  - {state: q_len_return_left, read: "#", next: q_len_return_left, write: "#", move: L}
+  - {state: q_len_return_left, read: "X", next: q_len_return_left, write: "X", move: L}
+  - {state: q_len_return_left, read: "Y", next: q_len_return_left, write: "Y", move: L}
+  - {state: q_len_return_left, read: "B", next: q_len_find_first, write: "B", move: R}
+
+  - {state: q_len_find_first, read: "X", next: q_len_find_first, write: "X", move: R}
+  - {state: q_len_find_first, read: "Y", next: q_len_find_first, write: "Y", move: R}
+  - {state: q_len_find_first, read: "0", next: q_len_to_second, write: "X", move: R}
+  - {state: q_len_find_first, read: "1", next: q_len_to_second, write: "Y", move: R}
+  - {state: q_len_find_first, read: "#", next: q_len_check_second, write: "#", move: R}
+  - {state: q_len_find_first, read: "B", next: q_clean_reject_left, write: "B", move: L}
+
+  - {state: q_len_to_second, read: "0", next: q_len_to_second, write: "0", move: R}
+  - {state: q_len_to_second, read: "1", next: q_len_to_second, write: "1", move: R}
+  - {state: q_len_to_second, read: "X", next: q_len_to_second, write: "X", move: R}
+  - {state: q_len_to_second, read: "Y", next: q_len_to_second, write: "Y", move: R}
+  - {state: q_len_to_second, read: "#", next: q_len_find_second, write: "#", move: R}
+
+  - {state: q_len_find_second, read: "X", next: q_len_find_second, write: "X", move: R}
+  - {state: q_len_find_second, read: "Y", next: q_len_find_second, write: "Y", move: R}
+  - {state: q_len_find_second, read: "0", next: q_len_return_left, write: "X", move: L}
+  - {state: q_len_find_second, read: "1", next: q_len_return_left, write: "Y", move: L}
+  - {state: q_len_find_second, read: "B", next: q_clean_accept_left, write: "B", move: L}
+
+  - {state: q_len_check_second, read: "X", next: q_len_check_second, write: "X", move: R}
+  - {state: q_len_check_second, read: "Y", next: q_len_check_second, write: "Y", move: R}
+  - {state: q_len_check_second, read: "0", next: q_clean_reject_left, write: "0", move: L}
+  - {state: q_len_check_second, read: "1", next: q_clean_reject_left, write: "1", move: L}
+  - {state: q_len_check_second, read: "B", next: q_restore_go_left, write: "B", move: L}
+
+  - {state: q_restore_go_left, read: "0", next: q_restore_go_left, write: "0", move: L}
+  - {state: q_restore_go_left, read: "1", next: q_restore_go_left, write: "1", move: L}
+  - {state: q_restore_go_left, read: "#", next: q_restore_go_left, write: "#", move: L}
+  - {state: q_restore_go_left, read: "X", next: q_restore_go_left, write: "X", move: L}
+  - {state: q_restore_go_left, read: "Y", next: q_restore_go_left, write: "Y", move: L}
+  - {state: q_restore_go_left, read: "B", next: q_restore_right, write: "B", move: R}
+
+  - {state: q_restore_right, read: "X", next: q_restore_right, write: "0", move: R}
+  - {state: q_restore_right, read: "Y", next: q_restore_right, write: "1", move: R}
+  - {state: q_restore_right, read: "0", next: q_restore_right, write: "0", move: R}
+  - {state: q_restore_right, read: "1", next: q_restore_right, write: "1", move: R}
+  - {state: q_restore_right, read: "#", next: q_restore_right, write: "#", move: R}
+  - {state: q_restore_right, read: "B", next: q_compare_return_left, write: "B", move: L}
+
+  - {state: q_compare_return_left, read: "0", next: q_compare_return_left, write: "0", move: L}
+  - {state: q_compare_return_left, read: "1", next: q_compare_return_left, write: "1", move: L}
+  - {state: q_compare_return_left, read: "#", next: q_compare_return_left, write: "#", move: L}
+  - {state: q_compare_return_left, read: "X", next: q_compare_return_left, write: "X", move: L}
+  - {state: q_compare_return_left, read: "Y", next: q_compare_return_left, write: "Y", move: L}
+  - {state: q_compare_return_left, read: "B", next: q_compare_first, write: "B", move: R}
+
+  - {state: q_compare_first, read: "X", next: q_compare_first, write: "X", move: R}
+  - {state: q_compare_first, read: "Y", next: q_compare_first, write: "Y", move: R}
+  - {state: q_compare_first, read: "0", next: q_cmp_second_0, write: "X", move: R}
+  - {state: q_compare_first, read: "1", next: q_cmp_second_1, write: "Y", move: R}
+  - {state: q_compare_first, read: "#", next: q_clean_reject_left, write: "#", move: L}
+
+  - {state: q_cmp_second_0, read: "0", next: q_cmp_second_0, write: "0", move: R}
+  - {state: q_cmp_second_0, read: "1", next: q_cmp_second_0, write: "1", move: R}
+  - {state: q_cmp_second_0, read: "X", next: q_cmp_second_0, write: "X", move: R}
+  - {state: q_cmp_second_0, read: "Y", next: q_cmp_second_0, write: "Y", move: R}
+  - {state: q_cmp_second_0, read: "#", next: q_cmp_find_second_0, write: "#", move: R}
+
+  - {state: q_cmp_second_1, read: "0", next: q_cmp_second_1, write: "0", move: R}
+  - {state: q_cmp_second_1, read: "1", next: q_cmp_second_1, write: "1", move: R}
+  - {state: q_cmp_second_1, read: "X", next: q_cmp_second_1, write: "X", move: R}
+  - {state: q_cmp_second_1, read: "Y", next: q_cmp_second_1, write: "Y", move: R}
+  - {state: q_cmp_second_1, read: "#", next: q_cmp_find_second_1, write: "#", move: R}
+
+  - {state: q_cmp_find_second_0, read: "X", next: q_cmp_find_second_0, write: "X", move: R}
+  - {state: q_cmp_find_second_0, read: "Y", next: q_cmp_find_second_0, write: "Y", move: R}
+  - {state: q_cmp_find_second_0, read: "0", next: q_compare_return_left, write: "X", move: L}
+  - {state: q_cmp_find_second_0, read: "1", next: q_clean_reject_left, write: "1", move: L}
+
+  - {state: q_cmp_find_second_1, read: "X", next: q_cmp_find_second_1, write: "X", move: R}
+  - {state: q_cmp_find_second_1, read: "Y", next: q_cmp_find_second_1, write: "Y", move: R}
+  - {state: q_cmp_find_second_1, read: "0", next: q_clean_accept_left, write: "0", move: L}
+  - {state: q_cmp_find_second_1, read: "1", next: q_compare_return_left, write: "Y", move: L}
+
+  - {state: q_clean_accept_left, read: "0", next: q_clean_accept_left, write: "0", move: L}
+  - {state: q_clean_accept_left, read: "1", next: q_clean_accept_left, write: "1", move: L}
+  - {state: q_clean_accept_left, read: "#", next: q_clean_accept_left, write: "#", move: L}
+  - {state: q_clean_accept_left, read: "X", next: q_clean_accept_left, write: "X", move: L}
+  - {state: q_clean_accept_left, read: "Y", next: q_clean_accept_left, write: "Y", move: L}
+  - {state: q_clean_accept_left, read: "B", next: q_clean_accept_right, write: "B", move: R}
+
+  - {state: q_clean_accept_right, read: "X", next: q_clean_accept_right, write: "0", move: R}
+  - {state: q_clean_accept_right, read: "Y", next: q_clean_accept_right, write: "1", move: R}
+  - {state: q_clean_accept_right, read: "0", next: q_clean_accept_right, write: "0", move: R}
+  - {state: q_clean_accept_right, read: "1", next: q_clean_accept_right, write: "1", move: R}
+  - {state: q_clean_accept_right, read: "#", next: q_clean_accept_right, write: "#", move: R}
+  - {state: q_clean_accept_right, read: "B", next: q_accept, write: "B", move: S}
+
+  - {state: q_clean_reject_left, read: "0", next: q_clean_reject_left, write: "0", move: L}
+  - {state: q_clean_reject_left, read: "1", next: q_clean_reject_left, write: "1", move: L}
+  - {state: q_clean_reject_left, read: "#", next: q_clean_reject_left, write: "#", move: L}
+  - {state: q_clean_reject_left, read: "X", next: q_clean_reject_left, write: "X", move: L}
+  - {state: q_clean_reject_left, read: "Y", next: q_clean_reject_left, write: "Y", move: L}
+  - {state: q_clean_reject_left, read: "B", next: q_clean_reject_right, write: "B", move: R}
+
+  - {state: q_clean_reject_right, read: "X", next: q_clean_reject_right, write: "0", move: R}
+  - {state: q_clean_reject_right, read: "Y", next: q_clean_reject_right, write: "1", move: R}
+  - {state: q_clean_reject_right, read: "0", next: q_clean_reject_right, write: "0", move: R}
+  - {state: q_clean_reject_right, read: "1", next: q_clean_reject_right, write: "1", move: R}
+  - {state: q_clean_reject_right, read: "#", next: q_clean_reject_right, write: "#", move: R}
+  - {state: q_clean_reject_right, read: "B", next: q_reject, write: "B", move: S}
