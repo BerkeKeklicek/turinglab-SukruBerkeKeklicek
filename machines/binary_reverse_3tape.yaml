@@ -1,0 +1,18 @@
+name: "binary_reverse_3tape"
+description: "3 seritli makine: binary girdiyi ucuncu seride ters olarak yazar."
+num_tapes: 3
+states: [q_copy, q_reverse, q_accept]
+input_alphabet: ["0", "1"]
+tape_alphabet: ["0", "1", "B"]
+blank: "B"
+start_state: q_copy
+accept_states: [q_accept]
+reject_states: []
+transitions:
+  - {state: q_copy, read: ["0", "B", "B"], next: q_copy, write: ["0", "0", "B"], move: [R, R, S]}
+  - {state: q_copy, read: ["1", "B", "B"], next: q_copy, write: ["1", "1", "B"], move: [R, R, S]}
+  - {state: q_copy, read: ["B", "B", "B"], next: q_reverse, write: ["B", "B", "B"], move: [S, L, S]}
+
+  - {state: q_reverse, read: ["B", "0", "B"], next: q_reverse, write: ["B", "0", "0"], move: [S, L, R]}
+  - {state: q_reverse, read: ["B", "1", "B"], next: q_reverse, write: ["B", "1", "1"], move: [S, L, R]}
+  - {state: q_reverse, read: ["B", "B", "B"], next: q_accept, write: ["B", "B", "B"], move: [L, R, L]}
