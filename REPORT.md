@@ -23,7 +23,8 @@ oluyor.
 Zorunlu kisimda tek seritli motor, dort farkli Turing makinesi ve test dosyalari
 hazirlandi. Ek puan icin de cok seritli Turing makinesi motorunun ilk calisan
 surumu eklendi. Bu bonus kisimda 3 seritli bir makine ile binary girdinin tersini
-ucuncu seride yazan bir ornek tasarlandi.
+ucuncu seride yazan bir ornek tasarlandi. Ayrica calisma adimlarini PNG kareler
+ve GIF olarak gosteren basit bir gorsellestirici de eklendi.
 
 ## 2. Mimari
 
@@ -60,6 +61,12 @@ Bu sinif genel olarak tek seritli motora benziyor ama gecis anahtari
 icinde liste olarak verilir ve bu listelerin uzunlugu `num_tapes` degeri ile
 uyumlu olmak zorundadir. Calisma sonucunda `final_tapes` listesi doner. Boylece
 her seridin son hali ayri ayri incelenebilir.
+
+Bonus D icin `turinglab/visualizer.py` dosyasi eklendi. Bu modul tek seritli
+bir makinenin history bilgisini alir ve her konfigurasyonu PNG kare olarak
+cizer. Karelerde durum bilgisi, serit kutulari, kafa konumu ve kafa oku
+gosterilir. `docs/images/` altinda `binary_increment` makinesi icin ornek PNG
+kareleri ve bir GIF ciktisi bulunur.
 
 ## 3. Tasarlanan Turing Makineleri
 
@@ -98,6 +105,12 @@ icin ucuncu seritte `01001` elde edilir. Bu ornek cok seritli makinelerde ara
 serit kullanmanin tek seritli tasarima gore nasil daha rahat oldugunu gostermek
 icin secildi.
 
+Bonus D kapsaminda `binary_increment.yaml` icin ilk adimlardan gorsel kareler
+urettim. Bu karelerde serit hucreleri kutular halinde, aktif kafa konumu ise
+mavi cerceve ve kirmizi ok ile gosteriliyor. Metin tabanli verbose cikti zaten
+mevcut oldugu icin gorsellestirici onu tamamlayan daha okunur bir yardimci arac
+olarak dusunuldu.
+
 ## 4. Kavramsal Tartisma: Halting Problemi
 
 TuringLab icinde halting problemini genel olarak cozmek mumkun degildir. Bunun
@@ -131,17 +144,17 @@ yararlidir, ama problemi genel durumda cozemez.
 ## 5. Sinirlar ve Ileri Calisma
 
 Projenin su anki halinde tek seritli deterministik Turing makineleri calisiyor.
-YAML dogrulama, history tutma, verbose cikti ve pytest testleri mevcut. Bununla
-birlikte proje hala gelistirilebilir. Ornegin hata mesajlari daha kullanici dostu
-hale getirilebilir, komut satiri arayuzu daha ayrintili secenekler alabilir ve
-makine calisma adimlari gorsel olarak sunulabilir.
+YAML dogrulama, history tutma, verbose cikti, pytest testleri, cok seritli motor
+ve temel gorsellestirme mevcut. Bununla birlikte proje hala gelistirilebilir.
+Ornegin hata mesajlari daha kullanici dostu hale getirilebilir ve komut satiri
+arayuzu daha ayrintili secenekler alabilir.
 
 Bonus A ile cok seritli motor eklendi ama bu kisim tek seritli motor kadar cok
 ornek makine icermiyor. Ileri calismada daha anlamli bir 3 seritli binary toplama
 makinesi yazilabilir. Ayrica non-deterministic Turing makinesi icin BFS tabanli
-bir motor eklemek de projeyi genisletir. Gorsellestirici tarafinda her adimin
-PNG veya GIF olarak uretilmesi, ozellikle verbose metin ciktisini takip etmekte
-zorlanan biri icin faydali olurdu.
+bir motor eklemek de projeyi genisletir. Gorsellestirici tarafinda ise su an
+tek seritli history uzerinden PNG ve GIF uretiliyor; ileride cok seritli
+makineleri de ayni anda gosterecek sekilde genisletilebilir.
 
 Bir baska sinir da performanstir. Bu proje egitim amacli oldugu icin oncelik
 okunabilirlik ve dogru davranis oldu. Tek seritli makinelerde cok fazla ileri
@@ -155,3 +168,4 @@ kullanilabilir.
 - Hesaplama Kurami ders notlari.
 - Python resmi dokumantasyonu: `dataclasses`, `pathlib`, `argparse`.
 - PyYAML dokumantasyonu.
+- Pillow dokumantasyonu.
